@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.Image_To_Text">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:layout_height="wrap_content">
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical"
+               android:layout_marginTop="10dp"
+               >
+               <Spinner
+                   android:id="@+id/voiceSpinnerFrom"
+                   android:layout_width="match_parent"
+                   android:layout_height="0dp"
+                   android:layout_weight="1"
+                   android:padding="5dp"/>
+               <ImageView
+                   android:layout_width="wrap_content"
+                   android:layout_height="0dp"
+                   android:layout_weight="0.5"
+                   android:layout_marginTop="10dp"
+                   android:src="@drawable/ic_compare"
+                   android:layout_gravity="center"/>
+               <Spinner
+                   android:id="@+id/voiceSpinnerTo"
+                   android:layout_width="match_parent"
+                   android:layout_height="0dp"
+                   android:layout_weight="1"
+                   android:padding="5dp"
+                   android:layout_marginTop="10dp"/>
+           </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:text="Write Or Speak"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"/>
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/voiceEdText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/backround_gradient"
+                android:ems="10"
+                android:gravity="start"
+                android:hint="Enter Your Text Or Tab on Speak"
+                android:importantForAutofill="no"
+                android:inputType="textImeMultiLine|textMultiLine"
+                android:padding="10dp"
+                android:scrollbars="vertical"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black"
+                android:textSize="20dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pitch"
+                android:textSize="16sp" />
+            <SeekBar
+                android:id="@+id/voiceseek_bar_pitch"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:progress="50" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Speed"
+                android:textSize="16sp" />
+            <SeekBar
+                android:id="@+id/voiceseek_bar_speed"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:progress="50" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/voicebutton_speak"
+                    android:layout_width="45sp"
+                    android:layout_height="45sp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/speak"
+                    tools:ignore="TouchTargetSizeCheck" />
+                <Button
+                    android:id="@+id/voicebutton_Translate"
+                    android:layout_marginStart="100sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="45sp"
+                    android:text="Translate Text"
+                    android:layout_gravity="center_horizontal"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            app:cardBackgroundColor="#fff"
+            app:cardCornerRadius="3dp"
+            app:cardUseCompatPadding="true"
+            app:cardElevation="3dp"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dp"
+                >
+                <TextView
+                    android:id="@+id/voicetranslatedText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#BDE8E6E6"
+                    android:gravity="center"
+                    android:scrollbars="vertical"
+                    android:text="Translated Your Text Here"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    android:textStyle="italic" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pitch"
+                android:textSize="16sp" />
+            <SeekBar
+                android:id="@+id/voiceseek_bar_pitchTranslatedText"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:progress="50" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Speed"
+                android:textSize="16sp" />
+            <SeekBar
+                android:id="@+id/voiceseek_bar_speedTranslatedText"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:progress="50"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/voicebutton_speakTranslatedText"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/speak"
+                    android:gravity="center_horizontal"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.05"
+                    android:layout_height="45sp" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    />
+                <ImageView
+                    android:id="@+id/voicemic"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.2"
+                    android:layout_height="60sp"
+                    android:src="@drawable/ic_mic"
+                    />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</ScrollView>
