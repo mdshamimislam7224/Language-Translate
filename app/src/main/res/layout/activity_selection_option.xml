@@ -10,17 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/googleAdLayout"
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/googleBannerAds"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/image_to_text"
-            android:orientation="vertical"
-            android:gravity="center_vertical|center_horizontal"/>
-
+            android:layout_height="wrap_content"
+           android:layout_marginTop="15dp"
+            ads:adSize="FULL_BANNER"
+            ads:adUnitId="@string/googleBannerAd">
+        </com.google.android.gms.ads.AdView>
         <RelativeLayout
-            android:layout_weight="2"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -31,7 +30,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
-                android:text="Image To Text"
+                android:text="Language Translator"
                 android:textColor="#ffc107"
                 android:textSize="27sp"
                 android:textStyle="bold" />
@@ -157,8 +156,6 @@
 
             </androidx.cardview.widget.CardView>
 
-
-
         </GridLayout>
 
 
@@ -206,7 +203,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="35dp"
-                        android:text="About"
+                        android:text="Setting"
                         android:textAlignment="center"
                         android:textColor="#ffc107"
                         android:textSize="18sp"
@@ -216,7 +213,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
-                        android:text="  OCR"
+                        android:text="Apps"
                         android:textAlignment="center"
                         android:textColor="#ffc107"
                         android:textSize="18sp"
@@ -267,7 +264,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="3dp"
-                        android:text=" Us"
+                        android:text="Us"
                         android:textAlignment="center"
                         android:textColor="#ffc107"
                         android:textSize="18sp"

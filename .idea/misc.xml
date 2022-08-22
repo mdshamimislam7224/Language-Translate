@@ -3,17 +3,23 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android_Studio/platforms/android-32/data/res/layout/select_dialog_singlechoice.xml" value="0.4171875" />
         <entry key="..\:/LanguageTranslate/app/src/main/res/drawable/backround_gradient.xml" value="0.222" />
         <entry key="..\:/LanguageTranslate/app/src/main/res/layout/activity_cropper.xml" value="0.4125" />
         <entry key="..\:/LanguageTranslate/app/src/main/res/layout/activity_image_to_text.xml" value="0.3984375" />
         <entry key="..\:/LanguageTranslate/app/src/main/res/layout/activity_main.xml" value="0.3984375" />
         <entry key="..\:/LanguageTranslate/app/src/main/res/layout/activity_main2.xml" value="0.21510416666666668" />
         <entry key="..\:/LanguageTranslate/app/src/main/res/layout/activity_selection_option.xml" value="0.21510416666666668" />
+        <entry key="..\:/LanguageTranslate/app/src/main/res/layout/activity_setting.xml" value="0.4125" />
         <entry key="..\:/LanguageTranslate/app/src/main/res/layout/activity_splash.xml" value="0.3984375" />
         <entry key="..\:/LanguageTranslate/app/src/main/res/layout/activity_voice_to_text.xml" value="0.4125" />
+        <entry key="..\:/LanguageTranslate/app/src/main/res/layout/dialog_searchable_spinner.xml" value="0.4161458333333333" />
         <entry key="..\:/LanguageTranslate/app/src/main/res/layout/language_select.xml" value="0.4114583333333333" />
         <entry key="..\:/LanguageTranslate/app/src/main/res/layout/language_select_layout.xml" value="0.4125" />
         <entry key="..\:/LanguageTranslate/app/src/main/res/layout/single_item_country_image.xml" value="0.33" />
+        <entry key="..\:/LanguageTranslate/app/src/main/res/menu/recyclerview_search_bar_item.xml" value="0.21354166666666666" />
+        <entry key="..\:/LanguageTranslate/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.222" />
+        <entry key="..\:/LanguageTranslate/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.222" />
       </map>
     </option>
   </component>

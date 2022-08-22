@@ -2,25 +2,30 @@ package com.mdshamimislam.languagetranslate.activity
 
 import android.Manifest
 import android.app.AlertDialog
+import android.app.ProgressDialog
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
-import android.os.Environment
+import android.os.*
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.util.SparseArray
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.vision.Frame
 import com.google.android.gms.vision.text.TextBlock
 import com.google.android.gms.vision.text.TextRecognizer
@@ -28,57 +33,74 @@ import com.google.mlkit.common.model.DownloadConditions
 import com.google.mlkit.nl.translate.Translation
 import com.google.mlkit.nl.translate.TranslatorOptions
 import com.mdshamimislam.languagetranslate.R
+import com.mdshamimislam.languagetranslate.adapter.searchSpinnerValueAdapter
+import com.mdshamimislam.languagetranslate.interfaces.AdsCallback
+import com.mdshamimislam.languagetranslate.interfaces.CallbackListener
+import com.mdshamimislam.languagetranslate.model_class.LanguageTranslate
+import com.mdshamimislam.languagetranslate.model_class.model_ClassMethod_Image_of_language
+import com.mdshamimislam.languagetranslate.utils.CommonConstantAd
+import com.mdshamimislam.languagetranslate.utils.NetworkCheck
+import com.mdshamimislam.languagetranslate.utils.ad_class
 import kotlinx.android.synthetic.main.activity_image_to_text.*
-import java.io.BufferedWriter
 import java.io.File
-import java.io.FileWriter
-import java.text.SimpleDateFormat
+
 import java.util.*
 
 
-class Image_To_Text : AppCompatActivity() ,View.OnClickListener {
+class Image_To_Text : AppCompatActivity() ,View.OnClickListener,AdsCallback,CallbackListener {
 
     private var TAG:String="Image_To_Text"
     private var getlanguageFrom:String?=""
-    private var InputLanguageFrom:String?=""
-
     private var getlanguageTo:String?=""
-    private var InputLanguageTo:String?=""
-
     var mGetContent: ActivityResultLauncher<String>? = null
     var mGetContent1: ActivityResultLauncher<Uri>? = null
 
     var mResultEt: EditText? = null
     private var addImageBtn: Button? = null
+    private var clear_text:Button?=null
     var mPreviewIv: ImageView? = null
+    private var image_for_show_imageToTextActivityFrom:ImageView?=null
+    private var image_for_show_imageToTextActivityTo:ImageView?=null
+    private var name_for_show_imageToTextActivityFrom: TextView? = null
+    private var name_for_show_imageToTextActivityTo: TextView? = null
+    private var image_show_ImageAndName_LayoutFrom:LinearLayout?=null
+    private var image_show_ImageAndName_LayoutTo:LinearLayout?=null
+    private  var editText_Searchview:SearchView?=null
+    private  var spinnerValue_search_RV:RecyclerView?=null
+    private var adapterTo: searchSpinnerValueAdapter?=null
+    private var adapterFrom: searchSpinnerValueAdapter?=null
+    private var imageSpinnerFrom:TextView?=null
+    private var imageSpinnerTo:TextView?=null
     var translatedText: TextView? = null
     private val mTTS: TextToSpeech? = null
     private  var mTTS1:TextToSpeech? = null
     private var translateBtn: Button? = null
-    var mstring: String? = null
     private var mSeekBarPitch: SeekBar? = null
     private var mSeekBarSpeed: SeekBar? = null
     private var mSeekBarPitch1: SeekBar? = null
     private var mSeekBarSpeed1: SeekBar? = null
-
+    private var sharedPreferences: SharedPreferences?=null
     private var mButtonSpeak: Button? = null
     private var mButtonSpeak1: Button? = null
+    private var progressDialog: ProgressDialog? = null
     private var sb:StringBuilder?=null
     private val CAMERA_REQUEST_CODE = 200
     private val STORAGE_REQUEST_CODE = 400
-    private val IMAGE_PICK_GALLERY_CODE = 1000
-    private val IMAGE_PICK_CAMERA_CODE = 1001
-    private val WRITE_EXTERNAL_STORAGE_CODE = 1
-    var text_toSpeech: TextToSpeech? =null
-    var text_toSpeech1: TextToSpeech? =null
+    private var text_toSpeech: TextToSpeech? =null
+    private var text_toSpeech1: TextToSpeech? =null
+    private var options:TranslatorOptions?=null
+    private var conditions:DownloadConditions?=null
+    private  var name:String?=null
+    private  var image:Int?=null
+    private  var positions:Int?=null
+    private  var nameTo:String?=null
+    private  var imageTo:Int?=null
+    private  var positionsTo:Int?=null
+    private var isLoaded = false
 
-    private lateinit var cameraPermission: Array<String>
-    private lateinit var storagePermission: Array<String>
 
     var image_uri: Uri? = null
     var path:Uri?=null
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,32 +110,98 @@ class Image_To_Text : AppCompatActivity() ,View.OnClickListener {
         translatedText = findViewById<View>(R.id.translatedText) as TextView
         mPreviewIv = findViewById<View>(R.id.imageIv) as ImageView
         addImageBtn = findViewById<View>(R.id.buttonclick) as Button
+        clear_text=findViewById<View>(R.id.clear_text) as Button
         translateBtn = findViewById<View>(R.id.button_Translate) as Button
         mButtonSpeak= findViewById(R.id.button_speak) as Button
         mButtonSpeak1= findViewById(R.id.button_speakTranslatedText) as Button
-
         mSeekBarPitch=findViewById(R.id.seek_bar_pitch) as SeekBar
         mSeekBarSpeed=findViewById(R.id.seek_bar_speed) as SeekBar
         mSeekBarPitch1=findViewById(R.id.seek_bar_pitchTranslatedText) as SeekBar
         mSeekBarSpeed1=findViewById(R.id.seek_bar_speedTranslatedText) as SeekBar
 
-        getlanguageFrom= intent.getStringExtra("getlanguageFrom")
-        InputLanguageFrom=  intent.getStringExtra("InputLanguageFrom")
-        getlanguageTo= intent.getStringExtra("getlanguageTo")
-        InputLanguageTo=  intent.getStringExtra("InputLanguageTo")
-
+        image_show_ImageAndName_LayoutFrom= findViewById(R.id.image_show_ImageAndName_LayoutFrom) as LinearLayout
+        image_show_ImageAndName_LayoutTo= findViewById(R.id.image_show_ImageAndName_LayoutTo) as LinearLayout
+        name_for_show_imageToTextActivityFrom= findViewById(R.id. name_for_show_imageToTextActivityFrom) as TextView
+        image_for_show_imageToTextActivityFrom= findViewById(R.id. image_for_show_imageToTextActivityFrom) as ImageView
+        name_for_show_imageToTextActivityTo= findViewById(R.id. name_for_show_imageToTextActivityTo) as TextView
+        image_for_show_imageToTextActivityTo= findViewById(R.id. image_for_show_imageToTextActivityTo) as ImageView
+        imageSpinnerFrom=findViewById(R.id.imageSpinnerFrom) as TextView
+        imageSpinnerTo=findViewById(R.id.imageSpinnerTo) as TextView
         addImageBtn!!.setOnClickListener(this)
         translateBtn!!.setOnClickListener(this)
         mButtonSpeak!!.setOnClickListener(this)
         mButtonSpeak1!!.setOnClickListener(this)
+        imageSpinnerFrom!!.setOnClickListener(this)
+        imageSpinnerTo!!.setOnClickListener(this)
+        image_show_ImageAndName_LayoutFrom!!.setOnClickListener(this)
+        image_show_ImageAndName_LayoutTo!!.setOnClickListener(this)
+        clear_text!!.setOnClickListener(this)
 
+        forAds()
         imageIntent()
         image_uri= createImageUrl()
         EditTextSpeak()
         translatedTextSpeak()
+        getSharedPrefValueRecieveMethod()
+
 
     }
 
+    private fun getSharedPrefValueRecieveMethod()
+    {
+        sharedPreferences = this.getSharedPreferences("SpinnerValue", Context.MODE_PRIVATE)
+        image = sharedPreferences!!.getInt("imageToimageFrom",0)
+        name = sharedPreferences!!.getString("imagenameFrom","")
+        positions = sharedPreferences!!.getInt("imagepositionFrom",0)
+
+        imageTo = sharedPreferences!!.getInt("imageToimageTo",0)
+        nameTo = sharedPreferences!!.getString("imagenameTo","")
+        positionsTo = sharedPreferences!!.getInt("imagepositionTo",0)
+
+        if (!image!!.equals(0) || !name!!.equals("") ||!positions!!.equals(0))
+        {
+            image_show_ImageAndName_LayoutFrom!!.visibility=View.VISIBLE
+            imageSpinnerFrom!!.visibility=View.GONE
+            imageSpinnerFrom!!.setText("")
+            name_for_show_imageToTextActivityFrom!!.setText(name)
+            image_for_show_imageToTextActivityFrom!!.setImageResource(image!!)
+
+
+        }
+        else
+        {
+            image_show_ImageAndName_LayoutFrom!!.visibility=View.GONE
+        }
+        if (!imageTo!!.equals(0) || !nameTo!!.equals("") ||!positionsTo!!.equals(0))
+        {
+            image_show_ImageAndName_LayoutTo!!.visibility=View.VISIBLE
+            imageSpinnerTo!!.visibility=View.GONE
+            imageSpinnerTo!!.setText("")
+            name_for_show_imageToTextActivityTo!!.setText(nameTo)
+            image_for_show_imageToTextActivityTo!!.setImageResource(imageTo!!)
+        }
+        else
+        {
+
+            image_show_ImageAndName_LayoutTo!!.visibility=View.GONE
+        }
+    }
+
+    private fun forAds()
+    {
+        if (NetworkCheck.isNetworkConnected(this))
+        {
+            ad_class.loadBannerAd(this,googleBannerAdsImageTotext)
+            CommonConstantAd.showInterstitialAdsGoogle(this,this)
+
+        }
+        else
+        {
+            NetworkCheck.openInternetDialog(this,true,this)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onClick(p0: View?) {
         if(p0!=null)
         {
@@ -123,72 +211,135 @@ class Image_To_Text : AppCompatActivity() ,View.OnClickListener {
             {
                 ShowImageImportDialog()
             }
-
-            R.id.button_Translate ->
+            R.id.imageSpinnerFrom ->
             {
-                var entertextEDT: String = mResultEt!!.getText().toString()
-                if (entertextEDT.isEmpty()  || image_uri!!.equals(null))
-                {
+                ClickspinnerMethod()
+            }
+            R.id.imageSpinnerTo ->
+            {
+                ClickspinnerMethodTo()
+            }
+            R.id.image_show_ImageAndName_LayoutFrom ->
+            {
+                ClickspinnerMethod()
+            }
+            R.id.image_show_ImageAndName_LayoutTo ->
+            {
+                ClickspinnerMethodTo()
+            }
+            R.id.clear_text ->
+            {
+               if (mResultEt!!.text.toString().equals(""))
+               {
+                   Toast.makeText(applicationContext, "Please Select Image Or Write Text", Toast.LENGTH_SHORT).show()
+               }
+                else
+               {
+                  mResultEt!!.setText("")
+               }
+            }
 
-                    Toast.makeText(this, "Please Choose Your Image", Toast.LENGTH_SHORT).show()
+            R.id.button_Translate -> {
+                var edText=mResultEt!!.text.toString().trim()
+                if (!edText.isEmpty())
+                {
+                    if (NetworkCheck.isNetworkConnected(this))
+                    {
+                        val i=positions
+                        val j=positionsTo
+                        //val i: Int= textViewFrom!!.getSelectedItemPosition()
+                        if (i != null) {
+                            LanguageTranslate.spinnerFromMehod(i)
+                        }
+                        var getValueSpinnerFrom= LanguageTranslate.getlanguageFrom
+                        if (j != null) {
+                            LanguageTranslate.spinnerToMehod(j)
+                        }
+                        var getValueSpinnerTo= LanguageTranslate.getlanguageTo
+
+                        options = TranslatorOptions.Builder()
+                            .setSourceLanguage(getValueSpinnerFrom!!)
+                            .setTargetLanguage(getValueSpinnerTo!!)
+                            .build()
+                        val translateGetLanguage = Translation.getClient(options!!)
+
+                        progressDialog = ProgressDialog(this)
+                        progressDialog!!.setTitle("Please Wait...")
+                        progressDialog!!.setMessage("Language Downloading...")
+                        progressDialog!!.show()
+                        progressDialog!!.setCancelable(false)
+
+
+                        conditions = DownloadConditions.Builder()
+                            .build()
+                        Log.d(TAG,"Condition="+conditions)
+                        translateGetLanguage.downloadModelIfNeeded(conditions!!)
+                            .addOnSuccessListener {
+
+                                // Model downloaded successfully. Okay to start translating.
+                                // (Set a flag, unhide the translation UI, etc.)
+                                translatedText!!.setText("Wait Translator language Downloading...")
+                                var text= mResultEt!!.text.toString()
+                                translateGetLanguage.translate(text)
+                                    .addOnSuccessListener { translated ->
+                                        progressDialog!!.dismiss()
+                                        // Translation successful.
+                                        translatedText!!.setText(translated)
+                                    }
+                                    .addOnFailureListener { exception ->
+                                        Toast.makeText(this, "Unuccessful"+exception, Toast.LENGTH_SHORT).show()
+                                    }
+
+
+                            }
+                            .addOnFailureListener { exception ->
+                                Toast.makeText(this, "Unuccessful Download Language"+exception, Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                    else
+                    {
+                        NetworkCheck.openInternetDialog(this , true, this)
+                    }
 
                 }
                 else
                 {
-
-                    val options = TranslatorOptions.Builder()
-                        .setSourceLanguage(getlanguageFrom!!)
-                        .setTargetLanguage(getlanguageTo!!)
-                        .build()
-                    val englishBengaliTranslator = Translation.getClient(options)
-
-                    var conditions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        DownloadConditions.Builder()
-                            .requireCharging()
-                            .requireWifi()
-                            .build()
-                    }
-                    else
-                    {
-                        TODO("VERSION.SDK_INT < N")
-                    }
-
-                    englishBengaliTranslator.downloadModelIfNeeded(conditions)
-                        .addOnSuccessListener {
-                            // Model downloaded successfully. Okay to start translating.
-                            // (Set a flag, unhide the translation UI, etc.)
-                            translatedText!!.setText("Wait Translator language Downloading...")
-                            var text= mResultEt!!.text.toString()
-                            //enterTextEDT!!.setText("")
-                            englishBengaliTranslator.translate(text)
-                                .addOnSuccessListener { translated ->
-                                    // Translation successful.
-                                    translatedText!!.setText(translated)
-                                }
-                                .addOnFailureListener { exception ->
-                                    // Error.
-                                    // ...
-                                }
-
-
-                        }
-                        .addOnFailureListener { exception ->
-                            Toast.makeText(this, "Unuccessful Download Language", Toast.LENGTH_SHORT).show()
-
-                            // Model couldn’t be downloaded or other internal error.
-                            // ...
-                        }
-
+                    Toast.makeText(this, "Please Enter Your Text", Toast.LENGTH_SHORT).show()
                 }
             }
 
             R.id.button_speak ->
             {
-                editTextSpeakSeekBar()
+                var entertextEDT: String = mResultEt!!.getText().toString()
+                if (entertextEDT.isEmpty()  || image_uri!!.equals(null))
+                {
+
+                    Toast.makeText(this, "Please Choose Your Image Or Text", Toast.LENGTH_SHORT).show()
+
+                }
+                else
+                {
+                    editTextSpeakSeekBar()
+                    EditTextSpeak()
+                }
+
             }
             R.id.button_speakTranslatedText ->
             {
-                translateTextSpeakSeekBar()
+                var translateText: String = translatedText!!.getText().toString()
+                if (translateText.isEmpty()  || image_uri!!.equals(null))
+                {
+
+                    Toast.makeText(this, "Please Translate Your Text", Toast.LENGTH_SHORT).show()
+
+                }
+                else
+                {
+                    translateTextSpeakSeekBar()
+                    translatedTextSpeak()
+                }
+
+
             }
         }
         }
@@ -227,7 +378,7 @@ class Image_To_Text : AppCompatActivity() ,View.OnClickListener {
 
             if (status == TextToSpeech.SUCCESS)
             {
-                val result= text_toSpeech!!.setLanguage(Locale(getlanguageFrom))
+                val result= text_toSpeech!!.setLanguage(Locale(getlanguageFrom!!))
 
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED)
                 {
@@ -248,7 +399,7 @@ class Image_To_Text : AppCompatActivity() ,View.OnClickListener {
     private fun translatedTextSpeak() {
             text_toSpeech1= TextToSpeech(this, TextToSpeech.OnInitListener { status ->
             if (status == TextToSpeech.SUCCESS) {
-                val result= text_toSpeech1!!.setLanguage(Locale(getlanguageTo))
+                val result= text_toSpeech1!!.setLanguage(Locale(getlanguageTo!!))
 
                 if (result == TextToSpeech.LANG_MISSING_DATA
                     || result == TextToSpeech.LANG_NOT_SUPPORTED
@@ -265,7 +416,65 @@ class Image_To_Text : AppCompatActivity() ,View.OnClickListener {
         })
     }
 
+    private fun ClickspinnerMethod()
+    {
+        imageSpinnerFrom!!.visibility=View.GONE
+        image_show_ImageAndName_LayoutFrom!!.visibility=View.VISIBLE
+        val alert = LayoutInflater.from(this).inflate(R.layout.dialog_searchable_spinner, null)
+        editText_Searchview = alert.findViewById<View>(R.id.editText_Searchview) as SearchView
+        spinnerValue_search_RV = alert.findViewById<View>(R.id.spinnerValue_search_RV) as RecyclerView
 
+        val mBuilder = AlertDialog.Builder(this).setView(alert)
+        //show dialog
+        val mAlertDialog = mBuilder.show()
+        mAlertDialog.setCanceledOnTouchOutside(false)
+
+        spinnerValue_search_RV!!.layoutManager= LinearLayoutManager(this)
+        adapterFrom= searchSpinnerValueAdapter( model_ClassMethod_Image_of_language.getCountryAndImage(),this,"imageSpinnerFrom" +
+                "")
+        spinnerValue_search_RV!!.adapter=adapterFrom
+
+        editText_Searchview!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(s: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(s: String): Boolean {
+                adapterFrom!!.filter.filter(s)
+                return false
+            }
+        })
+    }
+
+    private fun ClickspinnerMethodTo()
+    {
+        imageSpinnerTo!!.visibility=View.GONE
+        image_show_ImageAndName_LayoutTo!!.visibility=View.VISIBLE
+        val alert = LayoutInflater.from(this).inflate(R.layout.dialog_searchable_spinner, null)
+        editText_Searchview = alert.findViewById<View>(R.id.editText_Searchview) as SearchView
+        spinnerValue_search_RV = alert.findViewById<View>(R.id.spinnerValue_search_RV) as RecyclerView
+
+        val mBuilder = AlertDialog.Builder(this).setView(alert)
+        //show dialog
+        val mAlertDialog = mBuilder.show()
+        mAlertDialog.setCanceledOnTouchOutside(false)
+
+        spinnerValue_search_RV!!.layoutManager= LinearLayoutManager(this)
+        adapterTo= searchSpinnerValueAdapter( model_ClassMethod_Image_of_language.getCountryAndImage(),this,"imageSpinnerTo" +
+                "")
+        spinnerValue_search_RV!!.adapter=adapterTo
+
+        editText_Searchview!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(s: String): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(s: String): Boolean {
+                adapterTo!!.filter.filter(s)
+                return false
+            }
+        })
+    }
 
 
     private fun ShowImageImportDialog() {
@@ -444,28 +653,6 @@ class Image_To_Text : AppCompatActivity() ,View.OnClickListener {
         return FileProvider.getUriForFile(applicationContext,"com.mdshamimislam.languagetranslate.fileprovider",image)
     }
 
-
-    private fun saveToText(mstring: String) {
-        val timestamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(
-            System.currentTimeMillis()
-        )
-        try {
-            val path = Environment.getExternalStorageDirectory()
-            val dir = File("$path/Image To Text/")
-            dir.mkdir()
-            val filename = "ImageFile_ $timestamp.txt"
-            val file = File(dir, filename)
-            val fw = FileWriter(file.absoluteFile)
-            val bf = BufferedWriter(fw)
-            bf.write(mstring)
-            bf.close()
-            Toast.makeText(this, "$filename is saved to\n $dir", Toast.LENGTH_LONG)
-                .show()
-        } catch (e: Exception) {
-            Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
-        }
-    }
-
     override fun onDestroy() {
         if (mTTS != null || mTTS1 != null) {
             mTTS!!.stop()
@@ -474,6 +661,47 @@ class Image_To_Text : AppCompatActivity() ,View.OnClickListener {
             mTTS1!!.shutdown()
         }
         super.onDestroy()
+    }
+
+    override fun adLoadingFailed() {
+        TODO("Not yet implemented")
+    }
+
+    override fun adClose() {
+        TODO("Not yet implemented")
+    }
+
+    override fun startNextScreen() {
+        startNextActivity(0)
+    }
+    override fun onLoaded() {
+        isLoaded = true
+    }
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val myRunnable : Runnable = Runnable {
+        if (NetworkCheck.isNetworkConnected(this)) {
+            if (!this.isLoaded) {
+                startNextActivity(0)
+            }
+        }
+    }
+    fun startNextActivity(time: Long) {
+        handler.postDelayed({
+
+        }, time)
+    }
+
+    override fun onSuccess() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onCancel() {
+        TODO("Not yet implemented")
+    }
+
+    override fun onRetry() {
+        forAds()
     }
 
 }

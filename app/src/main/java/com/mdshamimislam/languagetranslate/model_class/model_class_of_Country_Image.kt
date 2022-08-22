@@ -1,6 +1,6 @@
 package com.mdshamimislam.languagetranslate.model_class
 
-class model_class_of_Country_Image
+ open class model_class_of_Country_Image
 {
     private var countryName: String? = null
     private var countryImage = 0

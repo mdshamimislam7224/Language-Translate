@@ -5,8 +5,8 @@ import com.mdshamimislam.languagetranslate.R
 
 class model_ClassMethod_Image_of_language
 {
-    companion object{ fun getCountryAndImage(): List<model_class_of_Country_Image> {
-        val countryName_Image: MutableList<model_class_of_Country_Image> = ArrayList<model_class_of_Country_Image>()
+    companion object{ fun getCountryAndImage(): ArrayList<model_class_of_Country_Image> {
+        val countryName_Image: ArrayList<model_class_of_Country_Image> = ArrayList<model_class_of_Country_Image>()
 
  //0
         val south_africa = model_class_of_Country_Image()

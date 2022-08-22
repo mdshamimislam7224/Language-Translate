@@ -15,18 +15,64 @@
             android:orientation="vertical"
             android:padding="5dp"
             android:layout_height="wrap_content">
+            <com.google.android.gms.ads.AdView
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/googleBannerAdsVoiceTotext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                ads:adSize="FULL_BANNER"
+                ads:adUnitId="@string/googleBannerAd">
+            </com.google.android.gms.ads.AdView>
            <LinearLayout
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
                android:orientation="vertical"
                android:layout_marginTop="10dp"
                >
-               <Spinner
+               <TextView
                    android:id="@+id/voiceSpinnerFrom"
                    android:layout_width="match_parent"
                    android:layout_height="0dp"
+                   android:textStyle="bold"
+                   android:textColor="@color/black"
+                   android:gravity="center"
+                   android:text="Select Language From"
+                   android:drawableEnd="@drawable/ic__array_down"
                    android:layout_weight="1"
                    android:padding="5dp"/>
+               <LinearLayout
+                   android:visibility="gone"
+                   android:id="@+id/show_ImageAndName_LayoutFrom"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:background="@drawable/backround_gradient"
+                   android:orientation="horizontal">
+                   <ImageView
+                       android:id="@+id/image_for_show_VoiceToTextActivityFrom"
+                       android:layout_width="0dp"
+                       android:layout_weight="1.2"
+                       android:paddingTop="10dp"
+                       android:layout_gravity="start"
+                       android:paddingBottom="10dp"
+                       android:layout_height="40dp"
+                       android:src="@drawable/flag_bangladesh"
+                       />
+                   <TextView
+                       android:id="@+id/name_for_show_VoiceToTextActivityFrom"
+                       android:layout_width="0dp"
+                       android:layout_height="40dp"
+                       android:paddingTop="10dp"
+                       android:textStyle="bold"
+                       android:textColor="@color/black"
+                       android:text="Bangladesh"
+                       android:paddingBottom="10dp"
+                       android:gravity="center"
+                       android:layout_weight="1"
+                       android:padding="5dp"
+                       />
+               </LinearLayout>
+
                <ImageView
                    android:layout_width="wrap_content"
                    android:layout_height="0dp"
@@ -34,13 +80,50 @@
                    android:layout_marginTop="10dp"
                    android:src="@drawable/ic_compare"
                    android:layout_gravity="center"/>
-               <Spinner
+               <TextView
                    android:id="@+id/voiceSpinnerTo"
                    android:layout_width="match_parent"
                    android:layout_height="0dp"
+                   android:gravity="center"
+                   android:textColor="@color/black"
+                   android:textStyle="bold"
+                   android:text="Select Language To"
+                   android:drawableEnd="@drawable/ic__array_down"
                    android:layout_weight="1"
                    android:padding="5dp"
                    android:layout_marginTop="10dp"/>
+
+               <LinearLayout
+                   android:visibility="gone"
+                   android:id="@+id/show_ImageAndName_LayoutTo"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   android:background="@drawable/backround_gradient"
+                   android:orientation="horizontal">
+                   <ImageView
+                       android:id="@+id/image_for_show_VoiceToTextActivityTo"
+                       android:layout_width="0dp"
+                       android:layout_weight="1.2"
+                       android:paddingTop="10dp"
+                       android:layout_gravity="start"
+                       android:paddingBottom="10dp"
+                       android:layout_height="40dp"
+                       android:src="@drawable/flag_bangladesh"
+                       />
+                   <TextView
+                       android:id="@+id/name_for_show_VoiceToTextActivityTo"
+                       android:layout_width="0dp"
+                       android:layout_height="40dp"
+                       android:paddingTop="10dp"
+                       android:text="Bangladesh"
+                       android:paddingBottom="10dp"
+                       android:textColor="@color/black"
+                       android:textStyle="bold"
+                       android:gravity="center"
+                       android:layout_weight="1"
+                       android:padding="5dp"
+                       />
+               </LinearLayout>
            </LinearLayout>
             <TextView
                 android:layout_width="match_parent"
@@ -53,11 +136,11 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/voiceEdText"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_marginTop="14dp"
                 android:background="@drawable/backround_gradient"
                 android:ems="10"
-                android:gravity="start"
+                android:gravity="center"
                 android:hint="Enter Your Text Or Tab on Speak"
                 android:importantForAutofill="no"
                 android:inputType="textImeMultiLine|textMultiLine"
@@ -69,7 +152,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pitch"
+                android:text="Voice"
                 android:textSize="16sp" />
             <SeekBar
                 android:id="@+id/voiceseek_bar_pitch"
@@ -79,7 +162,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Speed"
+                android:text="Voice Speed"
                 android:textSize="16sp" />
             <SeekBar
                 android:id="@+id/voiceseek_bar_speed"
@@ -93,19 +176,32 @@
 
                 <Button
                     android:id="@+id/voicebutton_speak"
-                    android:layout_width="45sp"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.3"
                     android:layout_height="45sp"
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/speak"
                     tools:ignore="TouchTargetSizeCheck" />
                 <Button
                     android:id="@+id/voicebutton_Translate"
-                    android:layout_marginStart="100sp"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="45sp"
-                    android:text="Translate Text"
-                    android:layout_gravity="center_horizontal"
+                    android:text="Translate"
                     />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.1"
+                    />
+                <Button
+                    android:id="@+id/voicebutton_Clear"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="45sp"
+                    android:text="Clear Text"
+                    />
+
             </LinearLayout>
 
         </LinearLayout>
@@ -130,7 +226,7 @@
                     android:background="#BDE8E6E6"
                     android:gravity="center"
                     android:scrollbars="vertical"
-                    android:text="Translated Your Text Here"
+                    android:hint="Translated Your Text Here"
                     android:textColor="@color/black"
                     android:textSize="20dp"
                     android:textStyle="italic" />
@@ -143,7 +239,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pitch"
+                android:text="Voice"
                 android:textSize="16sp" />
             <SeekBar
                 android:id="@+id/voiceseek_bar_pitchTranslatedText"
@@ -153,7 +249,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Speed"
+                android:text="Voice Speed"
                 android:textSize="16sp" />
             <SeekBar
                 android:id="@+id/voiceseek_bar_speedTranslatedText"

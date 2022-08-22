@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/browser_actions_bg_grey"
+    tools:context=".activity.Setting_Activity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <RelativeLayout
+            android:id="@+id/rltTop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#BFBDBD"
+            android:paddingTop="5dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize">
+
+
+                <ImageView
+                    android:id="@+id/imgBackButton"
+                    android:layout_width="45.0dip"
+                    android:layout_height="45.0dip"
+                    android:layout_margin="5.0dip"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/btn_back_150" />
+
+                <TextView
+                    android:id="@+id/txtTitleSubHome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Settings"
+                    android:textColor="@color/black"
+                    android:textSize="20.0dip"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/rltMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rltTop"
+            android:layout_marginTop="16dp"
+            android:orientation="vertical"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/rateUs"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="Rate"
+                android:textSize="20dp"
+                android:textColor="@color/black"
+                android:gravity="center_vertical"
+               />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"/>
+
+            <TextView
+                android:id="@+id/shareApp"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="Share"
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:gravity="center_vertical"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"/>
+
+            <TextView
+                android:id="@+id/contact_Us"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:gravity="center_vertical"
+                android:text="Send Feedback"
+                android:textColor="@color/black"
+                android:textSize="18dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/black"/>
+
+            <TextView
+                android:id="@+id/privacy_Policy"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="Privacy Policy"
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:gravity="center_vertical"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"/>
+
+            <TextView
+                android:id="@+id/moreApps"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="More App"
+                android:textSize="18dp"
+                android:textColor="@color/black"
+                android:gravity="center_vertical"
+               />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/googleBannerAdsSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        ads:adSize="FULL_BANNER"
+        ads:adUnitId="@string/googleBannerAd">
+    </com.google.android.gms.ads.AdView>
+
+    <LinearLayout
+        android:id="@+id/llAdViewFacebook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible" />
+</LinearLayout>

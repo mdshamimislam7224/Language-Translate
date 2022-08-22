@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Language Translate</string>
+    <string name="googleBannerAd">ca-app-pub-3491584953793219/5608915017</string>
+    <string name="googleIntersitialAd">ca-app-pub-3491584953793219/3157440673/</string>
 </resources>
